@@ -1,6 +1,5 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-USE ieee.numeric_std.all;
 
 entity Control_Unit is 
 	port (	  OpCode :	in std_logic_vector(5 downto 0);
