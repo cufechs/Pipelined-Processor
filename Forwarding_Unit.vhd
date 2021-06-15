@@ -17,12 +17,15 @@ end Forwarding_Unit;
 ARCHITECTURE Forwarding_Unit_a OF Forwarding_Unit IS
 BEGIN
 
-	forward1 <= "01" WHEN id_ex_Rsrc = ex_m_Rdst AND ex_m_wbEn = '1'
+	
+	forward1 <= "00" WHEN id_ex_Rsrc(3) = '1' 
 		ELSE "10" WHEN id_ex_Rsrc = m_wb_Rdst AND m_wb_wbEn = '1'
+		ELSE "01" WHEN id_ex_Rsrc = ex_m_Rdst AND ex_m_wbEn = '1'
 		ELSE "00";
 
-	forward2 <= "01" WHEN id_ex_Rdst = ex_m_Rdst AND ex_m_wbEn = '1'
+	forward2 <= "00" WHEN id_ex_Rdst(3) = '1' 
 		ELSE "10" WHEN id_ex_Rdst = m_wb_Rdst AND m_wb_wbEn = '1'
+		ELSE "01" WHEN id_ex_Rdst = ex_m_Rdst AND ex_m_wbEn = '1'
 		ELSE "00";
 
 END Forwarding_Unit_a;

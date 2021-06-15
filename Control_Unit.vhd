@@ -61,8 +61,9 @@ BEGIN
 
 
 	With OpCode(5 downto 0) select
-	WB_temp <= 	"001" WHEN "100011",
-		"001" WHEN "101101",
+	WB_temp <= 	"101" WHEN "100011",
+		"101" WHEN "101101",
+		"111" WHEN "100100",
 		
 		"111" WHEN "010001",
 		"111" WHEN "010010",
@@ -77,7 +78,7 @@ BEGIN
 		"111" WHEN "100111",
 
 
-		"0000" WHEN Others;
+		"000" WHEN Others;
 		
 	
 	With OpCode(5 downto 0) select

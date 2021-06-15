@@ -6,15 +6,18 @@ entity pipe is
 	port (	  clk,rst,Reset 	 :	in std_logic;
 			  inPort	 :	in std_logic_vector(31 downto 0);
 			  outPort	 :	out std_logic_vector(31 downto 0)
-		  );
-
+	);
 end pipe;  
 
 ARCHITECTURE a_pipe OF pipe IS
 
 -- Fetch
-SIGNAL Callop, BranchTaken, Fstall, instType_fetch : std_logic;
-SIGNAL Rdst, PCbranch,PopedPC, restPC, InstructionBits, PC_fetch : std_logic_vector(31 downto 0);
+SIGNAL StallFetch : std_logic := '0';
+SIGNAL Callop, BranchTaken, instType_fetch, FlushFetch : std_logic;
+SIGNAL InstructionBits, PC_fetch : std_logic_vector(31 downto 0);
+
+-- Fetch/Decode buffer
+SIGNAL FD_buffer_reset : std_logic;
 
 -- Decode
 SIGNAL instruction_in_decode : std_logic_vector(31 downto 0);
@@ -32,7 +35,7 @@ SIGNAL RdstAddr_out_execute, RsrcAddr_out_execute :  std_logic_vector(3 downto 0
 
 -- Conrol unit
 SIGNAL IDEX_stall : std_logic := '0';
-SIGNAL OpCode : std_logic_vector(5 downto 0);
+SIGNAL OpCode_decode : std_logic_vector(5 downto 0);
 SIGNAL EX_decode	 : std_logic_vector(7 downto 0);
 SIGNAL M_decode 	 : std_logic_vector(5 downto 0);
 SIGNAL WB_decode 	 : std_logic_vector(2 downto 0);
@@ -45,7 +48,7 @@ SIGNAL wb_data_decode : std_logic_vector (31 downto 0);
 
 -- Execute
 SIGNAL opcode_in_execute : std_logic_vector (5 downto 0);
-SIGNAL data1_execute, data2_execute, PC_in_execute : std_logic_vector (31 downto 0);
+SIGNAL Rdst_forwarded_execute, data1_execute, data2_execute, PC_in_execute : std_logic_vector (31 downto 0);
 SIGNAL Br_taken_execute, aluOp_execute, upd_flag_execute, outPortEn_execute, setcSig_execute, clrcSig_execute, brOp_execute : std_logic;
 SIGNAL brType_execute : std_logic_vector (1 downto 0);
 SIGNAL PC_out_execute, alu_out_execute : std_logic_vector (31 downto 0);
@@ -56,7 +59,7 @@ SIGNAL ex_m_wbEn, m_wb_wbEn : std_logic;
 SIGNAL forward1, forward2 : std_logic_vector (1 downto 0);
 
 -- Memory
-SIGNAL ALUoutput_in_memory, Rdst_data_memory, PC_memory, Memory_out : std_logic_vector (31 downto 0);
+SIGNAL ALUoutput_in_memory, Rdst_data_memory, PC_memory, Memory_addressZero, Memory_out : std_logic_vector (31 downto 0);
 SIGNAL Rdst_addr_memory : std_logic_vector (3 downto 0);
 SIGNAL brTaken_out_memory, instType_memory, MemData, MemAddr, retOp_memory : std_logic;
 SIGNAL MemSignal, SPsignal, WB_memory : std_logic_vector(1 downto 0);
@@ -75,22 +78,22 @@ BEGIN
         rst => rst,
 		Reset => Reset,
         Callop => Callop,
-		BranchTaken => BranchTaken,
+		BranchTaken => Br_taken_execute,
         RetOP => RetOp_wb,
-		Fstall => Fstall,
-        Rdst => Rdst,
-		PCbranch => PCbranch,
-		PopedPC => PopedPC,
-		restPC => restPC,
-		inst_type => instType_fetch,
+		Fstall => StallFetch,
+        Rdst => Rdst_forwarded_execute,
+		PCbranch => PC_memory,
+		PopedPC => Memory_output_WB,
+		restPC => Memory_addressZero,
+		inst_type_o => instType_fetch,
 		InstructionBits => InstructionBits,
 		PC => PC_fetch
     );  
 	 
-	 
+	FD_buffer_reset <= rst or FlushFetch;
 	FD_buffer: entity work.FDBuffer_E port map (
 		clk => clk,
-        rst => rst,
+        rst => FD_buffer_reset,
 		instruction_in => InstructionBits,
 		PC_in => PC_fetch,
 		instType_in => instType_fetch,
@@ -114,9 +117,9 @@ BEGIN
     );
 	 
 	 
-	OpCode <= instruction_in_decode(29 downto 24);
+	OpCode_decode <= instruction_in_decode(29 downto 24);
 	controlUnit: entity work.Control_Unit port map (
-		OpCode => OpCode,
+		OpCode => OpCode_decode,
 		stall => IDEX_stall,
 		EX => EX_decode,
 		M => M_decode,
@@ -128,7 +131,7 @@ BEGIN
 	M_in_DE_buffer <= instType_fetch & M_decode;
 	DE_buffer: entity work.ID_EX_buffer port map (
 		PC_in => PC_decode,
-		Opcode_in => OpCode,
+		Opcode_in => OpCode_decode,
 		data1_in => data1_decode,
 		data2_in => data2_decode,
 	 	RdstData_in => Rdest_decode,
@@ -186,15 +189,15 @@ BEGIN
 		data1 => data1_execute,
 		data2 => data2_execute,
 		PC_in => PC_in_execute,
-		Rdst_ex => Rdst_ex,
-		Rdst_m => Rdst_m,
+		Rdst_ex => Rdst_data_memory,
+		Rdst_m => WBdata,
 
-
+		Rdst_forwarded => Rdst_forwarded_execute,
 		Br_taken => Br_taken_execute,
 		alu_out => alu_out_execute,
 		PC_out => PC_out_execute
 	);
-	
+	outPort <= alu_out_execute WHEN outPortEn_execute = '1';
 	
 	forwardingUnit: entity work.Forwarding_Unit port map (
 		id_ex_Rsrc => RsrcAddr_out_execute,
@@ -257,6 +260,7 @@ BEGIN
 		ALUout => ALUoutput_in_memory,
 		PC => PC_memory,
 		
+		mem_addressZero => Memory_addressZero,
 		Stage4Out => Memory_out
 	);
 
@@ -286,6 +290,17 @@ BEGIN
 		WBSignal => WBSignal_WB,
 		
 		WBdata => WBdata
+	);
+
+	HazardDetectionUnit : entity work.HazardDetectionUnit port map (
+		Rsrc => InstructionBits(23 downto 20),
+		Rdst => InstructionBits(19 downto 16),
+		Rdst_Exec => instruction_in_decode(19 downto 16),
+		OpCodeFetch => InstructionBits(29 downto 24),
+		OpCodeDecode => instruction_in_decode(29 downto 24),
+        clk => clk,
+        FlushFetch => FlushFetch,
+		StallFetch => StallFetch
 	);
 	
 

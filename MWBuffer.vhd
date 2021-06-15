@@ -25,7 +25,7 @@ WbEnable_out <= '0';
 WbSignal_out <= '0';
 RetOp_out <= '0';
 Rdst_addr_out <= (OTHERS=>'0');
-ELSIF rising_edge(Clk) THEN
+ELSIF falling_edge(Clk) THEN
 ALU_output_out <= ALU_output_in;
 mem_output_out <= mem_output_in;
 WbEnable_out <= WB_in(0);

@@ -18,7 +18,7 @@ IF rst = '1' THEN
 instruction_out <= (OTHERS=>'0');
 PC_out <= (OTHERS=>'0');
 instType_out <= '0';
-ELSIF rising_edge(Clk) THEN
+ELSIF falling_edge(Clk) THEN
 instruction_out <= instruction_in;
 PC_out <= PC_in;
 instType_out <= instType_in;

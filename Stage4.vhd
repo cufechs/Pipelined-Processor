@@ -6,7 +6,8 @@ Port(
   instType,MemData,MemAddr,clk,rst:IN std_logic;
   MemSignal,SPsignal:IN std_logic_vector(1 downto 0);
   Rdst,ALUout,PC:IN std_logic_vector(31 downto 0);
-  Stage4Out:OUT std_logic_vector (31 downto 0)
+  
+  mem_addressZero, Stage4Out : OUT std_logic_vector (31 downto 0)
 );
 END ENTITY;
 
@@ -47,7 +48,7 @@ clk:IN std_logic;
 MemSel: IN std_logic_vector(1 downto 0);
 address : IN std_logic_vector(31 DOWNTO 0);
 datain : IN std_logic_vector(31 DOWNTO 0);
-dataout : OUT std_logic_vector(31 DOWNTO 0) );
+dataAddressZero, dataout : OUT std_logic_vector(31 DOWNTO 0) );
 end component;
 Signal Mux1Out,Mux2Out,Mux3Out,Addr1Out,Addr2Out,SPOut,MemOut:std_logic_vector(31 downto 0);
 BEGIN
@@ -57,7 +58,7 @@ BEGIN
   I3:Mux2x1_E generic map(32) port map(std_logic_vector(to_unsigned(2,32)),std_logic_vector(to_unsigned(1,32)),instType,Mux2Out);
   I4:Adder_E port map(Mux2Out,PC,Addr1Out);
   I5:Mux2x1_E generic map(32) port map(Addr1Out,Rdst,MemData,Mux3Out);
-  I6:DataMemory_E port map(clk,MemSignal,Mux1Out,Mux3Out,MemOut); 
+  I6:DataMemory_E port map(clk, MemSignal, Mux1Out, Mux3Out, mem_addressZero, MemOut); 
   Stage4Out<= MemOut; 
     
 END Architecture;

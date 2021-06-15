@@ -19,7 +19,7 @@ ENTITY Execute IS
 
 		Br_taken : OUT std_logic;
 
-		alu_out, PC_out : OUT std_logic_vector(31 downto 0)
+		Rdst_forwarded, alu_out, PC_out : OUT std_logic_vector(31 downto 0)
 	);
 END ENTITY;
 
@@ -88,7 +88,8 @@ BEGIN
 			Rdst_m WHEN "10",
 			data2 WHEN OTHERS;
 
-
+	Rdst_forwarded <= data2_Mux4x1;
+	
 	aluFunc_Mux2x1 <= Opcode WHEN alu_op = '1'
 		ELSE (OTHERS => '0');
 
