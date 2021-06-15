@@ -12,7 +12,7 @@ ENTITY Execute IS
 		
 		forward1, forward2 : IN std_logic_vector(1 downto 0);
 
-		alu_op, upd_flags, outPort_en : IN std_logic;
+		alu_op, upd_flag, outPort_en : IN std_logic;
 
 		data1, data2, PC_in : IN std_logic_vector(31 downto 0);
 		Rdst_ex, Rdst_m : IN std_logic_vector(31 downto 0);

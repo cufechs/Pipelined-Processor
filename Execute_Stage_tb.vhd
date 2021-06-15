@@ -13,9 +13,10 @@ ARCHITECTURE behavior OF Execute_Stage_tb IS
    --declare inputs and initialize them
    
 	signal OpCode : std_logic_vector(5 downto 0);
+	signal stall	 : std_logic;
 	signal EX	 : std_logic_vector(7 downto 0);
-	signal M 	 : std_logic_vector(6 downto 0);
-	signal WB 	 : std_logic_vector(3 downto 0);
+	signal M 	 : std_logic_vector(5 downto 0);
+	signal WB 	 : std_logic_vector(2 downto 0);
 	signal PC_opr, forward1, forward2 : std_logic_vector(1 downto 0);
 
 	signal clk, rst, br_taken : std_logic;
@@ -29,6 +30,7 @@ BEGIN
 	cu: entity work.Control_Unit port map (
 		OpCode => OpCode,
 		EX => EX,
+		stall => stall,
 		M => M,
 		WB => WB,
 		PC_opr => PC_opr
@@ -44,7 +46,7 @@ BEGIN
 		
 		forward1 => forward1, forward2 => forward2,
 
-		alu_op => EX(1), upd_flags => EX(0), outPort_en => EX(2),
+		alu_op => EX(1), upd_flag => EX(0), outPort_en => EX(2),
 		data1 => data1, data2 => data2, PC_in => PC_in,
 		Rdst_ex => Rdst_ex, Rdst_m => Rdst_m,
 

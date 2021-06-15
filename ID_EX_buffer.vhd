@@ -11,7 +11,7 @@ entity ID_EX_buffer is
 
 		  PCopr_in : in std_logic_vector(1 downto 0);
 		  WB_in : in std_logic_vector(2 downto 0);
-		  M_in : in std_logic_vector(7 downto 0);
+		  M_in : in std_logic_vector(6 downto 0);
 		  EX_in : in std_logic_vector(7 downto 0);
 
 		  clk	    :   in std_logic;
@@ -24,7 +24,7 @@ entity ID_EX_buffer is
 
 		  WB_out : out std_logic_vector(2 downto 0);
 		  M_out : out std_logic_vector(6 downto 0);
-		  memRead_out, retOp_out, callOp_out : out std_logic;
+		  retOp_out, callOp_out : out std_logic;
 		  updFlags_out, aluOp_out, outPortEn_out, setcSig_out
 			, clrcSig_out, brOp_out : out std_logic;
 		  brType_out : out std_logic_vector(1 downto 0) );
@@ -52,8 +52,7 @@ begin
 			callOp_out <= PCopr_in(1);	
 			retOp_out <= PCopr_in(0);	
 
-			M_out <= M_in(7 downto 1);
-			memRead_out <= M_in(0);
+			M_out <= M_in;
 
 			updFlags_out <= EX_in(0);	
 			aluOp_out <= EX_in(1);	
