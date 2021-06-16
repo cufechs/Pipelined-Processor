@@ -49,7 +49,7 @@ BEGIN
 
 	With OpCode(5 downto 0) select
 	M_temp <= 	"110101" WHEN "100010",
-		"001010" WHEN "100011",
+		"101010" WHEN "100011",
 		"000000" WHEN "100100",
 		"001000" WHEN "101101",
 		"010100" WHEN "101110",

@@ -13,7 +13,7 @@ dataAddressZero, dataout : OUT std_logic_vector(31 DOWNTO 0)
 END ENTITY;
 
 ARCHITECTURE DataMemory_A OF DataMemory_E IS 
-TYPE ram_type IS ARRAY(0 TO 524288 - 1) of std_logic_vector(15 DOWNTO 0);
+TYPE ram_type IS ARRAY(0 TO 524287) of std_logic_vector(15 DOWNTO 0);
 SIGNAL RAM : ram_type:=(
 --std_logic_vector(to_unsigned(0,16)), std_logic_vector(to_unsigned(1,16)), std_logic_vector(to_unsigned(2,16)), 
 --std_logic_vector(to_unsigned(3,16)), std_logic_vector(to_unsigned(4,16)), std_logic_vector(to_unsigned(5,16))

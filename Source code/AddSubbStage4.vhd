@@ -17,5 +17,3 @@ Architecture AdderStage4_A OF AdderStage4_E IS
 		ELSE A;
 
 END Architecture;
-
-

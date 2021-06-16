@@ -42,6 +42,10 @@ add wave -noupdate /pipe/stage1/Mux5Out
 add wave -noupdate /pipe/stage4/SPsignal
 add wave -noupdate /pipe/stage4/MemSignal
 add wave -noupdate /pipe/stage1/AdderOut
+
+add wave -noupdate /pipe/stage1/Rdst
+add wave -noupdate /pipe/stage1/BranchTaken
+
 TreeUpdate [SetDefaultTree]
 WaveRestoreCursors {{Cursor 1} {185 ps} 0}
 quietly wave cursor active 1
@@ -69,11 +73,7 @@ run 1 ps
 force -freeze sim:/pipe/rst 0 0
 run 99 ps
 force -freeze sim:/pipe/Reset 0 0
-force -freeze sim:/pipe/inPort 	00000000000000000000000000000101 0		
-run
-run
-run
-force -freeze sim:/pipe/inPort 	00000000000000000000000000011001 0		
+force -freeze sim:/pipe/inPort 	00000000000000000000000000011110 0		
 run
 run
 run
@@ -85,6 +85,18 @@ run
 run
 run
 run
+run
+run
+force -freeze sim:/pipe/inPort 	00000000000000000000000000110010 0	
+run
+force -freeze sim:/pipe/inPort 	00000000000000000000000001100100 0	
+run
+force -freeze sim:/pipe/inPort 	00000000000000000000000100101100 0	
+run
+run
+run
+run
+force -freeze sim:/pipe/inPort 	00000000000000000000000011001000 0
 run
 run
 run
