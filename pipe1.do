@@ -20,19 +20,13 @@ add wave -noupdate /pipe/stage3/cu/Z
 add wave -noupdate /pipe/stage3/cu/N
 add wave -noupdate /pipe/stage3/cu/C
 
-add wave -position 16  sim:/pipe/stage3/Z_flag_alu
-add wave -position 17  sim:/pipe/stage3/N_flag_alu
-add wave -position 18  sim:/pipe/stage3/C_flag_alu
-
-add wave -noupdate /pipe/stage3/cu/enable_update
-add wave -noupdate /pipe/stage3/cu/enable_update_C
-
 add wave -noupdate /pipe/data1_execute
 add wave -noupdate /pipe/data2_execute
 
 add wave -noupdate /pipe/WBdata
 add wave -noupdate /pipe/WbEnable_wb
 add wave -noupdate /pipe/WBSignal_WB
+add wave -noupdate /pipe/stage5/Memory
 add wave -noupdate /pipe/alu_out_execute
 add wave -noupdate /pipe/aluOp_execute
 add wave -noupdate /pipe/stage3/Opcode
@@ -45,6 +39,8 @@ add wave -noupdate /pipe/StallFetch
 add wave -noupdate /pipe/forward1
 add wave -noupdate /pipe/forward2
 add wave -noupdate /pipe/stage1/Mux5Out
+add wave -noupdate /pipe/stage4/SPsignal
+add wave -noupdate /pipe/stage4/MemSignal
 add wave -noupdate /pipe/stage1/AdderOut
 TreeUpdate [SetDefaultTree]
 WaveRestoreCursors {{Cursor 1} {185 ps} 0}
@@ -77,6 +73,7 @@ force -freeze sim:/pipe/inPort 	00000000000000000000000000000101 0
 run
 run
 run
+force -freeze sim:/pipe/inPort 	00000000000000000000000000011001 0		
 run
 run
 run
@@ -88,11 +85,10 @@ run
 run
 run
 run
-force -freeze sim:/pipe/inPort 	00000000000000000000000000010011 0	
 run
-force -freeze sim:/pipe/inPort 	11111111111111111111111111111111 0	
 run
-force -freeze sim:/pipe/inPort 	11111111111111111111001100100000 0	
+run
+run
 run
 run
 run
