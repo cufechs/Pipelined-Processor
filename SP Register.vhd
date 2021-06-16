@@ -15,8 +15,8 @@ BEGIN
 PROCESS (clk,rst)
 BEGIN
 IF rst = '1' THEN
-q <= (std_logic_vector(to_unsigned(1048574,32)));
-ELSIF rising_edge(Clk) THEN
+q <= "00000000000001111111111111111111";
+ELSIF rising_edge(clk) THEN
 q <= d;
 END IF;
 END PROCESS;

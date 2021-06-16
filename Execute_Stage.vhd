@@ -43,7 +43,7 @@ BEGIN
 	cu: entity work.CCR port map (
 		clk => clk, rst => rst,
 		brTaken => brTaken,
-		enable_update => alu_op,
+		enable_update => upd_flag,
 		enable_update_C => temp1,
 		brType => Br_type,
 		C_in => branch_Mux2x1, Z_in => Z_flag_alu, N_in => N_flag_alu, 

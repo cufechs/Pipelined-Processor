@@ -13,7 +13,8 @@ ARCHITECTURE a_pipe OF pipe IS
 
 -- Fetch
 SIGNAL StallFetch : std_logic := '0';
-SIGNAL Callop, BranchTaken, instType_fetch, FlushFetch : std_logic;
+SIGNAL FlushFetch : std_logic := '0';
+SIGNAL Callop, BranchTaken, instType_fetch : std_logic;
 SIGNAL InstructionBits, PC_fetch : std_logic_vector(31 downto 0);
 
 -- Fetch/Decode buffer
@@ -197,7 +198,7 @@ BEGIN
 		alu_out => alu_out_execute,
 		PC_out => PC_out_execute
 	);
-	outPort <= alu_out_execute WHEN outPortEn_execute = '1';
+	outPort <= Rdst_forwarded_execute WHEN outPortEn_execute = '1';
 	
 	forwardingUnit: entity work.Forwarding_Unit port map (
 		id_ex_Rsrc => RsrcAddr_out_execute,

@@ -23,12 +23,14 @@ add wave -noupdate /pipe/StallFetch
 add wave -noupdate /pipe/InstructionBits
 add wave -noupdate /pipe/forward1
 add wave -noupdate /pipe/forward2
-add wave -noupdate /pipe/stage1/mux5sel
-add wave -noupdate /pipe/stage1/Mux5Out
 add wave -position 15  sim:/pipe/ALUoutput_in_memory
 add wave -position 16  sim:/pipe/MemSignal
 add wave -position 19  sim:/pipe/Callop
 add wave -position 18  sim:/pipe/FlushFetch
+add wave -position 3  sim:/pipe/outPort
+add wave -position 19  sim:/pipe/Rdst_forwarded_execute
+add wave -position 3  sim:/pipe/inPort
+
 TreeUpdate [SetDefaultTree]
 WaveRestoreCursors {{Cursor 1} {973 ps} 0}
 quietly wave cursor active 1
@@ -55,9 +57,7 @@ force -freeze sim:/pipe/rst 1 0
 run
 force -freeze sim:/pipe/rst 0 0
 force -freeze sim:/pipe/Reset 0 0
-
-run
-run
+force -freeze sim:/pipe/inPort 	00000000000000001111111111111111 0
 run
 run
 run

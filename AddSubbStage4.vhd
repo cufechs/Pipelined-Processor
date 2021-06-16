@@ -11,16 +11,11 @@ Port(
 END ENTITY;
 Architecture AdderStage4_A OF AdderStage4_E IS
   BEGIN
-    PROCESS(clk)
-    BEGIN
-    IF clk'event and clk = '0' THEN 
-        IF Flag = "10" THEN
-    C <=std_logic_vector(to_unsigned(to_integer(unsigned(A)) - 2,32));
-        ELSIF Flag = "01" THEN
-    C <=std_logic_vector(to_unsigned(to_integer(unsigned(A)) + 2,32));
-        END IF;
-      END IF;    
-    END Process;
-    END Architecture;
+
+    C <= std_logic_vector(to_unsigned(to_integer(unsigned(A)) + 2,32)) WHEN Flag = "10"
+        ELSE std_logic_vector(to_unsigned(to_integer(unsigned(A)) - 2,32)) WHEN Flag = "01"
+		ELSE A;
+
+END Architecture;
 
 

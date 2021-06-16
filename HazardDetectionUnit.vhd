@@ -44,19 +44,11 @@ SIGNAL C2_OUT : std_logic_vector(1 DOWNTO 0);
 SIGNAL C3_OUT : std_logic_vector(1 DOWNTO 0);
 
 SIGNAL OutStallFetch: std_logic := '0';
-SIGNAL Reset: std_logic := '1';
 
 BEGIN
 
 PROCESS(clk)
 BEGIN
-
---if(Reset = '1') THEN
---	Reset <= '0';
---	StallFetch <= '0';
---	FlushFetch <= '0';
---	StallFetch <= '0';
---END IF;
 
 -- I take the 6 leaset significant bit from OpCodeFetch
 IF FALLING_EDGE(clk) THEN 
@@ -66,7 +58,8 @@ IF FALLING_EDGE(clk) THEN
 				OutStallFetch <= '1';
 				C1_Start <= '1';
 			END IF;
-		ELSIF (OpCodeFetch = "111001") or (OpCodeFetch = "111010") or (OpCodeFetch = "111011") or (OpCodeFetch = "111100") THEN  -- Bracnhing Occured
+		END IF;
+		IF (OpCodeFetch = "111001") or (OpCodeFetch = "111010") or (OpCodeFetch = "111011") or (OpCodeFetch = "111100") THEN  -- Bracnhing Occured
 			IF C1_OUT = "00" THEN
 				OutStallFetch <= '1';  --Two Times
 				Delay_Flush_2C <= '1';

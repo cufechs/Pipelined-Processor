@@ -9,5 +9,5 @@ Port(
 END Adder_E;
 Architecture Adder_A OF Adder_E IS
   BEGIN 
-    C<=std_logic_vector(to_unsigned(to_integer(unsigned(A)) + to_integer(unsigned(B)),32));  
+    C <= std_logic_vector(to_unsigned(to_integer(unsigned(A)) + to_integer(unsigned(B)),32));  
   END Architecture;

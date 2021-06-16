@@ -26,6 +26,9 @@ BEGIN
 				C <= C_in;
 				Z <= Z_in;
 				N <= N_in;
+				
+				--C <= '0' WHEN C = 'X';
+				--N <= '0' WHEN N = 'X';
 			ELSIF enable_update_C = '1' THEN
 				C <= C_in;
 			END IF;

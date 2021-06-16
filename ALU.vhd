@@ -51,11 +51,12 @@ BEGIN
 
 	
 	
-	temp_data2 <= (0 => '1', OTHERS => '0') WHEN aluFunc = "010010" -- INC
+	temp_data2 <= "00000000000000000000000000000001" WHEN aluFunc = "010010" -- INC
 		ELSE (OTHERS => '1') WHEN aluFunc = "010011" --DEC
 		ELSE data2 WHEN aluFunc = "011111" OR aluFunc = "100111" --ADD, IADD
 			OR aluFunc = "101101" OR aluFunc = "101110" -- LDD, STD
 		ELSE (std_logic_vector(to_signed(to_integer(signed(NOT data2)) + 1,32))) WHEN aluFunc = "011000" -- SUB
+		ELSE (OTHERS => '0')
 	;
 	
 	c_flag <= temp_Cout_adder WHEN aluFunc = "010010" OR aluFunc = "010011" -- INC, DEC
@@ -78,7 +79,7 @@ BEGIN
 	result <= temp_result;
 
 	z_flag <= '1' WHEN temp_result = "00000000000000000000000000000000"
-				AND (aluFunc = "010001" OR aluFunc = "010010" --NOT,INC 
+				AND (aluFunc = "010001" OR aluFunc = "010010" --NOT, INC 
 				OR aluFunc = "010011" OR aluFunc = "011111" -- DEC, ADD
 				OR aluFunc = "100111" OR aluFunc = "011000" -- IADD, SUB 
 				OR aluFunc = "011001" OR aluFunc = "011010") -- AND, OR

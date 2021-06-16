@@ -18,6 +18,6 @@ Architecture Mux4x1_A Of Mux4x1_E IS
     OUT1 <= IN1 When SEL = "00"
       else  IN2 When SEL = "01"
       else  IN3 When SEL = "10"
-      else  IN4 When SEL = "11"; 
+      else  IN4; 
  END Architecture;     
         
